@@ -8,8 +8,8 @@ export const authOptions = {
       name: "Credentials",
 
       credentials: {
-        // username: { label: "Username", type: "text", placeholder: "jsmith" },
-        // password: { label: "Password", type: "password" },
+        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
         console.log(credentials);
@@ -35,49 +35,28 @@ export const authOptions = {
 
       const isExist = await dbConnect(collections.USERS).findOne({
         email: user.email,
-        // provider: account?.provider,
       });
-      if (isExist) {
-        return true;
-      }
+      if (isExist) return true;
 
       const newUser = {
-        provider: account?.provider,
         email: user.email,
         name: user.name,
         image: user.image,
         role: "user",
+        provider: account.provider,
       };
       const result = await dbConnect(collections.USERS).insertOne(newUser);
 
       return result.acknowledged;
-      // return true
     },
     // async redirect({ url, baseUrl }) {
     //   return baseUrl;
     // },
-    async session({ session, token, user }) {
-      if (token) {
-        session.role = token?.role;
-        session.email = token?.email;
-      }
-      return session;
-    },
-    async jwt({ token, user, account, profile, isNewUser }) {
-      console.log("account data in token", account);
-      if (user) {
-        if (account.provider == "google") {
-          const dbUser = await dbConnect(collections.USERS).findOne({
-            email: user.email,
-          });
-          token.role = dbUser?.role;
-          token.email = dbUser?.email;
-        } else {
-          token.role = user?.role;
-          token.email = user?.email;
-        }
-      }
-      return token;
-    },
+    // async session({ session, token, user }) {
+    //   return session;
+    // },
+    // async jwt({ token, user, account, profile, isNewUser }) {
+    //   return token;
+    // },
   },
 };
