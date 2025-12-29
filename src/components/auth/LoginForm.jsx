@@ -10,9 +10,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginForm() {
     const searchParams = useSearchParams();
+    const router = useRouter();
     const callBack = searchParams.get("callbackUrl") || "/";
 
-    const router = useRouter();
+
     const [form, setForm] = useState({
         email: "",
         password: "",
@@ -32,14 +33,15 @@ export default function LoginForm() {
         const result = await signIn('credentials', {
             email: form.email,
             password: form.password,
-            // redirect: false,
+            redirect: false,
             callbackUrl: searchParams.get("callbackUrl") || "/"
         });
         console.log(result);
         if (!result.ok) {
-            Swal.fire("error", "Email Password not matched", "error")
+            Swal.fire("error", "Email Password not matched. Try Google login / register", "error")
         } else {
             Swal.fire("success", "Welcome", "success");
+            router.push(callBack);
 
         }
     };

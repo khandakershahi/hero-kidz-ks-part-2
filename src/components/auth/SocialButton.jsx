@@ -10,7 +10,10 @@ export default function SocialButton() {
     console.log(searchParams.get("callbackUrl") || "/");
 
     const handleSignIn = async () => {
-        const result = await signIn('google', { redirect: "false", callbackUrl: searchParams.get("callbackUrl") || "/" })
+        const result = await signIn('google', {
+            // redirect: "false",
+            callbackUrl: searchParams.get("callbackUrl") || "/"
+        })
         console.log(result);
         if (result.ok) {
             Swal.fire("success", "welcome", "success");

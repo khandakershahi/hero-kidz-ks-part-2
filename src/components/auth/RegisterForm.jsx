@@ -6,6 +6,7 @@ import SocialButton from "./SocialButton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { postUser } from "@/actions/server/auth";
 import { signIn } from "next-auth/react";
+import Swal from "sweetalert2";
 
 export default function RegisterForm() {
 
@@ -31,74 +32,83 @@ export default function RegisterForm() {
         e.preventDefault();
         // console.log("Register data:", form);
         const result = await postUser(form);
+
         if (result.acknowledged) {
             // router.push('/login');
             const result = await signIn("credentials", {
                 email: form.email,
                 password: form.password,
                 callbackUrl: callBack
-            })
-            alert('successful');
-        }
-    };
+            });
 
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-base-200">
-            <div className="card w-full max-w-sm shadow-xl bg-base-100">
-                <div className="card-body space-y-4">
-                    <h2 className="card-title justify-center text-2xl">
-                        Create Account
-                    </h2>
+            if (result.ok) {
+                Swal.fire("success", "Register successfully", "success");
+                router.push(callBack);
 
-                    <form onSubmit={handleSubmit} className="space-y-3">
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Full Name"
-                            className="input input-bordered w-full"
-                            value={form.name}
-                            onChange={handleChange}
-                            required
-                        />
+            } else {
+                Swal.fire("error", "Sorry", "error")
 
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            className="input input-bordered w-full"
-                            value={form.email}
-                            onChange={handleChange}
-                            required
-                        />
+            }
+        };
 
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            className="input input-bordered w-full"
-                            value={form.password}
-                            onChange={handleChange}
-                            required
-                        />
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-base-200">
+                <div className="card w-full max-w-sm shadow-xl bg-base-100">
+                    <div className="card-body space-y-4">
+                        <h2 className="card-title justify-center text-2xl">
+                            Create Account
+                        </h2>
 
-                        <button type="submit" className="btn btn-primary w-full">
-                            Register
-                        </button>
-                    </form>
+                        <form onSubmit={handleSubmit} className="space-y-3">
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Full Name"
+                                className="input input-bordered w-full"
+                                value={form.name}
+                                onChange={handleChange}
+                                required
+                            />
 
-                    <div className="divider">OR</div>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                className="input input-bordered w-full"
+                                value={form.email}
+                                onChange={handleChange}
+                                required
+                            />
 
-                    <SocialButton />
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                className="input input-bordered w-full"
+                                value={form.password}
+                                onChange={handleChange}
+                                required
+                            />
 
-                    {/* ✅ LOGIN LINK */}
-                    <p className="text-center text-sm">
-                        Already have an account?{" "}
-                        <Link href="/login" className="link link-primary">
-                            Login
-                        </Link>
-                    </p>
+                            <button type="submit" className="btn btn-primary w-full">
+                                Register
+                            </button>
+                        </form>
+
+                        <div className="divider">OR</div>
+
+                        <SocialButton />
+
+                        {/* ✅ LOGIN LINK */}
+                        <p className="text-center text-sm">
+                            Already have an account?{" "}
+                            <Link href="/login" className="link link-primary">
+                                Login
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
+};
