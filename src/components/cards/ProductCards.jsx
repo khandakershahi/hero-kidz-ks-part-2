@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaStar, FaShoppingCart, FaEye } from "react-icons/fa";
+import CartButton from "../buttons/CartButton";
 
 export default function ProductCard({ product, onAddToCart }) {
     const { _id, title, image, price, ratings, reviews, sold } = product;
@@ -36,22 +37,19 @@ export default function ProductCard({ product, onAddToCart }) {
                 </div>
 
                 {/* Buttons */}
-                <div className="mt-4 flex gap-2">
+                <div className="mt-4 flex gap-3 flex-col">
+
+                    <CartButton product={{ ...product, _id: _id.toString() }}></CartButton>
+
                     <Link
                         href={`/products/${product._id}`}
-                        className="btn btn-outline btn-md flex-1 flex items-center gap-2"
+                        className="btn btn-outline flex-1 flex items-center p-4 w-full"
                     >
                         <FaEye />
                         View Details
                     </Link>
 
-                    <button
-                        className="btn btn-primary btn-md flex-1 flex items-center gap-2"
-                        onClick={() => onAddToCart?.(product)}
-                    >
-                        <FaShoppingCart />
-                        Add to Cart
-                    </button>
+
                 </div>
             </div>
         </div>
